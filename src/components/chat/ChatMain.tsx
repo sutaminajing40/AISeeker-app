@@ -50,9 +50,9 @@ export default function ChatMain({
             placeholder="Type your message..."
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            className="flex-1"
+            className="w-100 flex-1 text-black"
           />
-          <Button type="submit">
+          <Button type="submit" className="flex-9 bg-gray-700 text-white">
             <Send className="mr-2 h-4 w-4" />
             Send
           </Button>
