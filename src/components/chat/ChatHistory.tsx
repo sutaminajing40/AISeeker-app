@@ -17,17 +17,17 @@ export default function ChatHistory({
   onSelectChat,
 }: ChatHistoryProps) {
   return (
-    <div className="overflow-y-auto h-[calc(100vh-120px)]">
+    <div className="h-[calc(100vh-120px)] overflow-y-auto">
       {history.map((item) => (
         <Button
           key={item.id}
           variant={item.isActive ? "secondary" : "ghost"}
-          className="w-full justify-start text-left mb-1"
+          className="mb-1 w-full justify-start text-left"
           onClick={() => onSelectChat(item.id)}
         >
           <div>
             <div className="font-semibold">{item.title}</div>
-            <div className="text-sm text-gray-500 dark:text-gray-400 truncate">
+            <div className="truncate text-sm text-gray-500 dark:text-gray-400">
               {item.lastMessage}
             </div>
           </div>
