@@ -7,17 +7,18 @@ const querySchema = z.object({
   query: z.string().min(1, "クエリは必須です。"),
 });
 
-export async function POST(req: NextRequest) {
+export async function GET(req: NextRequest) {
   try {
-    const body = await req.json();
-    const validation = validateRequest(body, querySchema);
-    const query = validation.query;
+    const query = req.nextUrl.searchParams.get("q");
+
+    const validation = validateRequest({ query }, querySchema);
+    const validatedQuery = validation.query;
 
     const queryService = new QueryService();
-    const result = await queryService.sendQuery(query);
-    return NextResponse.json(result, { status: 200 });
+    const result = await queryService.sendQuery(validatedQuery);
+    return NextResponse.json({ message: result }, { status: 200 });
   } catch (err) {
-    console.error("Error in POST /api/query:", err);
+    console.error("Error in GET /api/query:", err);
 
     if (err instanceof Error) {
       // バリデーションエラーを含む一般的なエラー処理

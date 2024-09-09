@@ -2,7 +2,7 @@ import { useMessages } from "../../hooks/useMessages";
 import ChatHeader from "./ChatHeader";
 import ChatFooter from "./ChatFooter";
 import MessageBubble from "./MessageBubble";
-import { postChat } from "../../fetches/chat/postChat";
+import { getAiResponse } from "../../fetches/chat/getAiResponse";
 
 interface ChatMainProps {
   chatTitle: string;
@@ -23,7 +23,8 @@ const ChatMain = ({
     // ユーザーのメッセージをUIに表示
     displayMessage(inputMessage, "user");
 
-    const response = await postChat(inputMessage);
+    const result = await getAiResponse(inputMessage);
+    const response = result.message;
     displayMessage(response, "ai");
   };
 
