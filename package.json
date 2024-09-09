@@ -9,13 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@langchain/community": "^0.2.32",
-    "@langchain/core": "^0.2.31",
+    "@langchain/community": "^0.2.4",
     "class-variance-authority": "^0.7.0",
-    "dotenv": "^16.4.5",
-    "langchain": "^0.2.18",
+    "dotenv": "^8.6.0",
+    "faiss-node": "^0.5.1",
+    "langchain": "^0.2.11",
     "lucide-react": "^0.438.0",
     "next": "14.2.7",
+    "pdf-parse": "^1.1.1",
     "react": "^18",
     "react-dom": "^18",
     "tailwind-merge": "^2.5.2"

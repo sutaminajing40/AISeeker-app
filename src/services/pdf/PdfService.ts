@@ -20,24 +20,10 @@ export class PdfService {
     }
   }
 
-  public async getVectorStore(): Promise<FaissStore> {
-    if (fs.existsSync(this.faissIndexDir)) {
-      const vectorStore = await FaissStore.load(this.faissIndexDir, embeddings);
-      return vectorStore;
-    } else {
-      throw new Error("ベクトルデータベースが存在しません。");
-    }
-  }
-
-  public deletePdf(): void {
-    fs.rmSync(this.pdfSaveDir, { recursive: true });
-    fs.rmSync(this.faissIndexDir, { recursive: true });
-  }
-
   public savePdf(fileName: string, pdfFileData: Buffer): string {
     const pdfSavePath = `${this.pdfSaveDir}/${fileName}`;
     if (fs.readdirSync(this.pdfSaveDir).includes(fileName)) {
-      throw new Error();
+      throw new Error("ファイルが既に存在します。");
     }
     fs.writeFileSync(pdfSavePath, pdfFileData);
     return pdfSavePath;
@@ -59,5 +45,19 @@ export class PdfService {
     }
     await vectorStore.addDocuments(docs);
     await vectorStore.save(this.faissIndexDir);
+  }
+
+  public async getVectorStore(): Promise<FaissStore> {
+    if (fs.existsSync(this.faissIndexDir)) {
+      const vectorStore = await FaissStore.load(this.faissIndexDir, embeddings);
+      return vectorStore;
+    } else {
+      throw new Error("ベクトルデータベースが存在しません。");
+    }
+  }
+
+  public deletePdf(): void {
+    fs.rmSync(this.pdfSaveDir, { recursive: true });
+    fs.rmSync(this.faissIndexDir, { recursive: true });
   }
 }
