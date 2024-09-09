@@ -1,63 +1,71 @@
 import { useState } from "react";
-import { Menu, Send } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import ChatHeader from "./ChatHeader";
+import ChatFooter from "./ChatFooter";
 
 interface ChatMainProps {
-  onOpenSidebar: () => void;
-  selectedChat: string | null;
   chatTitle: string;
+  selectedChat: string | null;
+  onOpenSidebar: () => void;
 }
 
-export default function ChatMain({
-  onOpenSidebar,
-  selectedChat,
+interface Message {
+  id: string;
+  content: string;
+  sender: "user" | "ai";
+}
+
+const ChatMain = ({
   chatTitle,
-}: ChatMainProps) {
-  const [message, setMessage] = useState("");
+  selectedChat,
+  onOpenSidebar,
+}: ChatMainProps) => {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [inputMessage, setInputMessage] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Message sent:", message);
-    setMessage("");
+    if (inputMessage.trim()) {
+      const newMessage: Message = {
+        id: Date.now().toString(),
+        content: inputMessage,
+        sender: "user",
+      };
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+      setInputMessage("");
+      // ここでAIの応答を処理します
+    }
   };
 
   return (
     <main className="flex flex-1 flex-col overflow-hidden">
-      <header className="flex items-center justify-between border-b p-4 dark:border-gray-700">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={onOpenSidebar}
-          className="md:hidden"
-        >
-          <Menu className="h-6 w-6" />
-          <span className="sr-only">Open sidebar</span>
-        </Button>
-        <h1 className="text-xl font-semibold text-gray-800 dark:text-white">
-          {selectedChat ? chatTitle : "Select a chat"}
-        </h1>
-      </header>
+      <ChatHeader
+        onOpenSidebar={onOpenSidebar}
+        selectedChat={selectedChat}
+        chatTitle={chatTitle}
+      />
 
       <div className="flex-1 overflow-y-auto p-4">
-        {/* Chat messages would be rendered here */}
+        {messages.map((message) => (
+          <div
+            key={message.id}
+            className={`mb-4 ${message.sender === "user" ? "text-right" : "text-left"}`}
+          >
+            <div
+              className={`inline-block rounded p-2 ${message.sender === "user" ? "bg-blue-500 text-white" : "bg-gray-200 text-black"}`}
+            >
+              {message.content}
+            </div>
+          </div>
+        ))}
       </div>
 
-      <footer className="border-t p-4 dark:border-gray-700">
-        <form onSubmit={handleSubmit} className="flex space-x-2">
-          <Input
-            type="text"
-            placeholder="Type your message..."
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            className="w-100 flex-1 text-black"
-          />
-          <Button type="submit" className="flex-9 bg-gray-700 text-white">
-            <Send className="mr-2 h-4 w-4" />
-            Send
-          </Button>
-        </form>
-      </footer>
+      <ChatFooter
+        message={inputMessage}
+        setMessage={setInputMessage}
+        handleSubmit={handleSubmit}
+      />
     </main>
   );
-}
+};
+
+export default ChatMain;
