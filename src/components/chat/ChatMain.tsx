@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useMessages } from "../../hooks/useMessages";
 import ChatHeader from "./ChatHeader";
 import ChatFooter from "./ChatFooter";
 import MessageBubble, { Message } from "./MessageBubble";
+import { postChat } from "../../fetches/chat/postChat";
 
 interface ChatMainProps {
   chatTitle: string;
@@ -14,45 +15,34 @@ const ChatMain = ({
   selectedChat,
   onOpenSidebar,
 }: ChatMainProps) => {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [inputMessage, setInputMessage] = useState("");
+  const {
+    messages,
+    inputMessage,
+    setInputMessage,
+    displayMessage,
+    clearInput,
+  } = useMessages();
+
+  const addMessage = (content: string, sender: "user" | "bot") => {
+    const newMessage: Message = {
+      id: Date.now().toString(),
+      content,
+      sender,
+    };
+    displayMessage(newMessage);
+    if (sender === "user") {
+      clearInput();
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (inputMessage.trim()) {
-      const newUserMessage: Message = {
-        id: Date.now().toString(),
-        content: inputMessage,
-        sender: "user",
-      };
-      setMessages((prevMessages) => [...prevMessages, newUserMessage]);
-      setInputMessage("");
+    addMessage(inputMessage, "user");
 
-      try {
-        const response = await fetch("/api/query", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ query: inputMessage }),
-        });
+    const response = await postChat(inputMessage);
 
-        if (!response.ok) {
-          throw new Error("APIリクエストに失敗しました");
-        }
-
-        const data = await response.json();
-        const newAIMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          content: data,
-          sender: "bot",
-        };
-        setMessages((prevMessages) => [...prevMessages, newAIMessage]);
-      } catch (error) {
-        console.error("Error:", error);
-        // エラーハンドリングをここに追加できます（例：エラーメッセージの表示）
-      }
-    }
+    const data = await response.json();
+    addMessage(data, "bot");
   };
 
   return (
