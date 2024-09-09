@@ -1,53 +1,30 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { PdfService } from "@/services/pdf/PdfService";
-import fs from "fs";
 
-export async function POST(req: Request): Promise<NextResponse> {
-  const formData = await req.formData();
-  const pdfFile = formData.get("pdf") as File | null;
-
-  if (!pdfFile) {
-    return NextResponse.json(
-      { message: "PDFファイルがありません。" },
-      { status: 400 }
-    );
-  }
-
-  if (pdfFile.type !== "application/pdf") {
-    return NextResponse.json(
-      {
-        message:
-          "不正なコンテンツタイプです。application/pdfである必要があります。",
-      },
-      { status: 400 }
-    );
-  }
-
-  const fileName = pdfFile.name;
-  const pdfFileData = await pdfFile.arrayBuffer();
-  const pdfService = new PdfService();
-
+export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
-    const pdfSavePath = pdfService.savePdf(fileName, Buffer.from(pdfFileData));
-    try {
-      await pdfService.processPdf(pdfSavePath);
-      return NextResponse.json(
-        { message: "PDFの登録が完了しました" },
-        { status: 200 }
-      );
-    } catch (processErr) {
-      // 処理中にエラーが発生した場合、保存したPDFファイルを削除する
-      fs.unlinkSync(pdfSavePath);
-      return NextResponse.json(
-        { message: "PDFの処理に失敗しました。" },
-        { status: 500 }
-      );
+    // binaryリクエストからPDFファイルを取得し、Node.jsで扱えるBufferに変換
+    const blob = await req.blob();
+    const arrayBuffer = await blob.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    // クエリパラメータからファイル名の取得
+    const fileName = req.nextUrl.searchParams.get("fileName");
+    if (!fileName) {
+      throw new Error("ファイル名が指定されていません。");
     }
-  } catch (saveErr) {
+
+    const pdfService = new PdfService();
+
+    const pdfSavePath = pdfService.savePdf(fileName, buffer);
+    await pdfService.processPdf(pdfSavePath);
     return NextResponse.json(
-      { message: "このPDFはすでに登録されています。" },
-      { status: 409 }
+      { message: "PDFの登録が完了しました" },
+      { status: 200 }
     );
+  } catch (err: unknown) {
+    console.error("Error in POST /api/pdf:", err);
+    return NextResponse.json({ message: err }, { status: 500 });
   }
 }
 
