@@ -9,7 +9,7 @@ interface ChatHistoryItem {
   title: string;
 }
 
-export default function ChatLayout() {
+const ChatLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [chatHistory, setChatHistory] = useState<ChatHistoryItem[]>([
     { id: "1", title: "Chat 1" },
@@ -47,4 +47,6 @@ export default function ChatLayout() {
       />
     </div>
   );
-}
+};
+
+export default ChatLayout;

@@ -12,10 +12,7 @@ interface ChatHistoryProps {
   onSelectChat: (id: string) => void;
 }
 
-export default function ChatHistory({
-  history,
-  onSelectChat,
-}: ChatHistoryProps) {
+const ChatHistory = ({ history, onSelectChat }: ChatHistoryProps) => {
   return (
     <div className="h-[calc(100vh-120px)] overflow-y-auto">
       {history.map((item) => (
@@ -35,4 +32,6 @@ export default function ChatHistory({
       ))}
     </div>
   );
-}
+};
+
+export default ChatHistory;
