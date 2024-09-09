@@ -14,13 +14,13 @@ interface SidebarProps {
   onChatSelect: (id: string) => void;
 }
 
-export default function Sidebar({
+const Sidebar = ({
   isOpen,
   onClose,
   chatHistory,
   selectedChat,
   onChatSelect,
-}: SidebarProps) {
+}: SidebarProps) => {
   return (
     <aside
       className={`fixed inset-y-0 left-0 z-50 w-64 transform bg-white transition-transform duration-300 ease-in-out dark:bg-gray-800 ${
@@ -70,4 +70,6 @@ export default function Sidebar({
       </Button>
     </aside>
   );
-}
+};
+
+export default Sidebar;

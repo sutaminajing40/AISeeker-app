@@ -4,7 +4,7 @@ type Message = {
   sender: "user" | "bot";
 };
 
-function MessageBubble({ message }: { message: Message }) {
+const MessageBubble = ({ message }: { message: Message }) => {
   return (
     <div
       className={`rounded-lg p-2 ${
@@ -14,4 +14,6 @@ function MessageBubble({ message }: { message: Message }) {
       {message.text}
     </div>
   );
-}
+};
+
+export default MessageBubble;
