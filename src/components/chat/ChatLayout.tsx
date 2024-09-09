@@ -11,11 +11,8 @@ interface ChatHistoryItem {
 
 const ChatLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [chatHistory, setChatHistory] = useState<ChatHistoryItem[]>([
-    { id: "1", title: "Chat 1" },
-    { id: "2", title: "Chat 2" },
-    { id: "3", title: "Chat 3" },
-  ]);
+
+  const chatHistory: ChatHistoryItem[] = [{ id: "1", title: "Chat 1" }];
   const [selectedChat, setSelectedChat] = useState<string | null>(null);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
