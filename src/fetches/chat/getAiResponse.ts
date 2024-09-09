@@ -1,7 +1,7 @@
 export const getAiResponse = async (inputMessage: string) => {
   try {
     const url = new URL("/api/query", window.location.origin);
-    url.searchParams.append("q", inputMessage);
+    url.searchParams.append("q", encodeURIComponent(inputMessage));
 
     const response = await fetch(url.toString(), {
       method: "GET",
