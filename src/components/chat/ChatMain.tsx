@@ -1,7 +1,7 @@
 import { useMessages } from "../../hooks/useMessages";
 import ChatHeader from "./ChatHeader";
 import ChatFooter from "./ChatFooter";
-import MessageBubble, { Message } from "./MessageBubble";
+import MessageBubble from "./MessageBubble";
 import { postChat } from "../../fetches/chat/postChat";
 
 interface ChatMainProps {
@@ -15,34 +15,16 @@ const ChatMain = ({
   selectedChat,
   onOpenSidebar,
 }: ChatMainProps) => {
-  const {
-    messages,
-    inputMessage,
-    setInputMessage,
-    displayMessage,
-    clearInput,
-  } = useMessages();
-
-  const addMessage = (content: string, sender: "user" | "bot") => {
-    const newMessage: Message = {
-      id: Date.now().toString(),
-      content,
-      sender,
-    };
-    displayMessage(newMessage);
-    if (sender === "user") {
-      clearInput();
-    }
-  };
+  const { messages, inputMessage, displayMessage, setInputMessage } =
+    useMessages();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    addMessage(inputMessage, "user");
+    // ユーザーのメッセージをUIに表示
+    displayMessage(inputMessage, "user");
 
     const response = await postChat(inputMessage);
-
-    const data = await response.json();
-    addMessage(data, "bot");
+    displayMessage(response, "ai");
   };
 
   return (

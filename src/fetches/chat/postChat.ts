@@ -10,7 +10,7 @@ export const postChat = async (inputMessage: string) => {
     if (!response) {
       return Response.json({ message: "結果が返されませんでした" });
     }
-    return response;
+    return response.json();
   } catch (error) {
     console.error("Error:", error);
     return Response.json({ message: "エラーが発生しました" });

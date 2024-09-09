@@ -1,17 +1,21 @@
 import { useState } from "react";
-
-export interface Message {
-  id: string;
-  content: string;
-  sender: "user" | "bot";
-}
+import { Message } from "../components/chat/MessageBubble";
 
 export const useMessages = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
 
-  const displayMessage = (newMessage: Message) => {
+  const displayMessage = (content: string, sender: "user" | "ai") => {
+    const newMessage: Message = {
+      id: Date.now().toString(),
+      content,
+      sender,
+    };
     setMessages((prevMessages) => [...prevMessages, newMessage]);
+
+    if (sender === "user") {
+      clearInput();
+    }
   };
 
   const clearInput = () => {
@@ -21,8 +25,7 @@ export const useMessages = () => {
   return {
     messages,
     inputMessage,
-    setInputMessage,
     displayMessage,
-    clearInput,
+    setInputMessage,
   };
 };
