@@ -9,7 +9,8 @@ const querySchema = z.object({
 
 export async function GET(req: NextRequest) {
   try {
-    const query = req.nextUrl.searchParams.get("q");
+    const { searchParams } = new URL(req.url);
+    const query = searchParams.get("q");
 
     const validation = validateRequest({ query }, querySchema);
     const validatedQuery = validation.query;
