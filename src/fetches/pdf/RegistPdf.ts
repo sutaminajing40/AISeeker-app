@@ -12,18 +12,16 @@ export const RegistPdf = async (
         `/api/pdf?fileName=${encodeURIComponent(file.name)}`,
         formData
       );
+
       return { success: true, errorMessage: "" };
     } catch (error) {
       if (error instanceof AxiosError) {
         return {
           success: false,
-          errorMessage: error.message,
+          errorMessage:
+            error.response?.data?.message || "不明なエラーが発生しました。",
         };
       }
-      return {
-        success: false,
-        errorMessage: "不明なエラーが発生しました。",
-      };
     }
   }
   return {

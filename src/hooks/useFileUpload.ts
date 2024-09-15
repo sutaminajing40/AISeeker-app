@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from "react";
 
 interface UseFileUploadResult {
   isLoading: boolean;
-  uploadStatus: "success" | "error";
+  uploadResponce: { success: boolean; errorMessage: string };
   fileName: string | null;
   isToastVisible: boolean;
   isToastLeaving: boolean;
@@ -16,9 +16,10 @@ interface UseFileUploadResult {
 
 export function useFileUpload(): UseFileUploadResult {
   const [isLoading, setIsLoading] = useState(false);
-  const [uploadStatus, setUploadStatus] = useState<"success" | "error">(
-    "error"
-  );
+  const [uploadResponce, setUploadResponce] = useState<{
+    success: boolean;
+    errorMessage: string;
+  }>({ success: false, errorMessage: "" });
   const [fileName, setFileName] = useState<string | null>(null);
   const [isToastVisible, setIsToastVisible] = useState(false);
   const [isToastLeaving, setIsToastLeaving] = useState(false);
@@ -34,7 +35,7 @@ export function useFileUpload(): UseFileUploadResult {
 
     const response = await RegistPdf(file);
     setIsLoading(false);
-    setUploadStatus(response.success ? "success" : "error");
+    setUploadResponce(response);
     if (response.success) {
       setFileName(file.name);
     }
@@ -67,7 +68,7 @@ export function useFileUpload(): UseFileUploadResult {
 
   return {
     isLoading,
-    uploadStatus,
+    uploadResponce,
     fileName,
     isToastVisible,
     isToastLeaving,

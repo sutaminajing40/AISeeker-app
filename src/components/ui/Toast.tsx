@@ -3,7 +3,7 @@ import { CheckCircle, XCircle } from "lucide-react";
 import clsx from "clsx";
 
 interface ToastNotificationProps {
-  uploadStatus: "success" | "error";
+  uploadResponce: { success: boolean; errorMessage: string };
   fileName: string | null;
   isLeaving: boolean;
 }
@@ -33,15 +33,16 @@ const toastConfig: ToastConfigType = {
   error: {
     icon: <XCircle className="mr-2 h-5 w-5 text-red-500" />,
     title: "アップロード失敗",
-    message: () => "PDFのアップロードに失敗しました。もう一度お試しください。",
+    message: (errorMessage = "") => `${errorMessage}`,
   },
 };
 
 export function ToastNotification({
-  uploadStatus,
+  uploadResponce,
   fileName,
   isLeaving,
 }: ToastNotificationProps) {
+  const uploadStatus = uploadResponce.success ? "success" : "error";
   const config = toastConfig[uploadStatus];
 
   return (
@@ -58,7 +59,9 @@ export function ToastNotification({
         {config.icon}
         <div>
           <h2 className="font-semibold">{config.title}</h2>
-          <p className="text-sm">{config.message(fileName || undefined)}</p>
+          <p className="text-sm">
+            {config.message(fileName || uploadResponce.errorMessage)}
+          </p>
         </div>
       </div>
     </div>

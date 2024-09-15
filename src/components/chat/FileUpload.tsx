@@ -6,7 +6,7 @@ import { UploadButton } from "@/components/chat/FileUploadButton";
 export function FileUpload() {
   const {
     isLoading,
-    uploadStatus,
+    uploadResponce,
     fileName,
     isToastVisible,
     isToastLeaving,
@@ -27,7 +27,7 @@ export function FileUpload() {
       <UploadButton isLoading={isLoading} onClick={triggerFileUpload} />
       {isToastVisible && (
         <ToastNotification
-          uploadStatus={uploadStatus}
+          uploadResponce={uploadResponce}
           fileName={fileName}
           isLeaving={isToastLeaving}
         />
