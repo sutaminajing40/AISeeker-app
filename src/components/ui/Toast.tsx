@@ -3,8 +3,9 @@ import { CheckCircle, XCircle } from "lucide-react";
 import clsx from "clsx";
 
 interface ToastNotificationProps {
-  uploadResponce: { success: boolean; errorMessage: string };
-  fileName: string | null;
+  isSuccess: boolean;
+  title: string;
+  message: string;
   isLeaving: boolean;
 }
 
@@ -16,52 +17,32 @@ const toastClasses = {
   hidden: "translate-x-full opacity-0",
 };
 
-type ToastConfigType = {
-  [key in "success" | "error"]: {
-    icon: JSX.Element;
-    title: string;
-    message: (fileName?: string) => string;
-  };
-};
-
-const toastConfig: ToastConfigType = {
-  success: {
-    icon: <CheckCircle className="mr-2 h-5 w-5 text-green-500" />,
-    title: "アップロード成功",
-    message: (fileName = "") => `ファイル名: ${fileName}`,
-  },
-  error: {
-    icon: <XCircle className="mr-2 h-5 w-5 text-red-500" />,
-    title: "アップロード失敗",
-    message: (errorMessage = "") => `${errorMessage}`,
-  },
+const icons = {
+  success: <CheckCircle className="mr-2 h-5 w-5 text-green-500" />,
+  error: <XCircle className="mr-2 h-5 w-5 text-red-500" />,
 };
 
 export function ToastNotification({
-  uploadResponce,
-  fileName,
+  isSuccess,
+  title,
+  message,
   isLeaving,
 }: ToastNotificationProps) {
-  const uploadStatus = uploadResponce.success ? "success" : "error";
-  const config = toastConfig[uploadStatus];
-
   return (
     <div
       className={clsx(
         toastClasses.base,
-        uploadStatus === "success" ? toastClasses.success : toastClasses.error,
+        isSuccess ? toastClasses.success : toastClasses.error,
         isLeaving ? toastClasses.hidden : toastClasses.visible
       )}
       role="alert"
       aria-live="polite"
     >
       <div className="flex items-center">
-        {config.icon}
+        {icons[isSuccess ? "success" : "error"]}
         <div>
-          <h2 className="font-semibold">{config.title}</h2>
-          <p className="text-sm">
-            {config.message(fileName || uploadResponce.errorMessage)}
-          </p>
+          <h2 className="font-semibold">{title}</h2>
+          <p className="text-sm">{message}</p>
         </div>
       </div>
     </div>

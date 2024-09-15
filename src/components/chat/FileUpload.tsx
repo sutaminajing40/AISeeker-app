@@ -27,8 +27,15 @@ export function FileUpload() {
       <UploadButton isLoading={isLoading} onClick={triggerFileUpload} />
       {isToastVisible && (
         <ToastNotification
-          uploadResponce={uploadResponce}
-          fileName={fileName}
+          isSuccess={uploadResponce.success}
+          title={
+            uploadResponce.success ? "アップロード成功" : "アップロード失敗"
+          }
+          message={
+            uploadResponce.success
+              ? `ファイル名: ${fileName}`
+              : uploadResponce.errorMessage
+          }
           isLeaving={isToastLeaving}
         />
       )}
