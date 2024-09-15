@@ -1,47 +1,79 @@
-import { useRef, useState } from "react";
-import axios from "axios";
+import { RegistPdf } from "@/fetches/pdf/RegistPdf";
+import { useState, useRef, useEffect } from "react";
 
-export function useFileUpload() {
+interface UseFileUploadResult {
+  isLoading: boolean;
+  uploadResponce: { success: boolean; errorMessage: string };
+  fileName: string | null;
+  isToastVisible: boolean;
+  isToastLeaving: boolean;
+  fileInputRef: React.RefObject<HTMLInputElement>;
+  handleFileUpload: (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => Promise<void>;
+  triggerFileUpload: () => void;
+}
+
+export function useFileUpload(): UseFileUploadResult {
+  const [isLoading, setIsLoading] = useState(false);
+  const [uploadResponce, setUploadResponce] = useState<{
+    success: boolean;
+    errorMessage: string;
+  }>({ success: false, errorMessage: "" });
+  const [fileName, setFileName] = useState<string | null>(null);
+  const [isToastVisible, setIsToastVisible] = useState(false);
+  const [isToastLeaving, setIsToastLeaving] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadError, setUploadError] = useState<string | null>(null);
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file && file.type === "application/pdf") {
-      setIsUploading(true);
-      setUploadError(null);
+  const handleFileUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
 
-      try {
-        const formData = new FormData();
-        formData.append("file", file);
+    setIsLoading(true);
 
-        await axios.post(
-          `/api/pdf?fileName=${encodeURIComponent(file.name)}`,
-          formData
-        );
-
-        console.log("PDFのアップロードが成功しました:", file.name);
-      } catch (error) {
-        console.error("PDFのアップロード中にエラーが発生しました:", error);
-        setUploadError(
-          "PDFのアップロードに失敗しました。もう一度お試しください。"
-        );
-      } finally {
-        setIsUploading(false);
-      }
-    } else {
-      setUploadError("有効なPDFファイルを選択してください");
+    const response = await RegistPdf(file);
+    setIsLoading(false);
+    setUploadResponce(response);
+    if (response.success) {
+      setFileName(file.name);
     }
+
+    setIsToastVisible(true);
+    setIsToastLeaving(false);
   };
 
-  const triggerFileUpload = () => fileInputRef.current?.click();
+  const triggerFileUpload = () => {
+    fileInputRef.current?.click();
+  };
+
+  useEffect(() => {
+    if (isToastVisible) {
+      const timer = setTimeout(() => {
+        setIsToastLeaving(true);
+      }, 2700); // 2.7秒後にトーストの退出アニメーションを開始
+
+      const hideTimer = setTimeout(() => {
+        setIsToastVisible(false);
+        setIsToastLeaving(false);
+      }, 3000); // 3秒後にトーストを完全に非表示にする
+
+      return () => {
+        clearTimeout(timer);
+        clearTimeout(hideTimer);
+      };
+    }
+  }, [isToastVisible]);
 
   return {
+    isLoading,
+    uploadResponce,
+    fileName,
+    isToastVisible,
+    isToastLeaving,
     fileInputRef,
     handleFileUpload,
     triggerFileUpload,
-    isUploading,
-    uploadError,
   };
 }

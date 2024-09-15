@@ -24,7 +24,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     );
   } catch (err: unknown) {
     console.error("Error in POST /api/pdf:", err);
-    return NextResponse.json({ message: err }, { status: 500 });
+    const errorMessage =
+      err instanceof Error ? err.message : "不明なエラーが発生しました。";
+    return NextResponse.json({ message: errorMessage }, { status: 500 });
   }
 }
 

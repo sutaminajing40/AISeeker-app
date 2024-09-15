@@ -23,7 +23,7 @@ export class PdfService {
   public savePdf(fileName: string, pdfFileData: Buffer): string {
     const pdfSavePath = `${this.pdfSaveDir}/${fileName}`;
     if (fs.readdirSync(this.pdfSaveDir).includes(fileName)) {
-      throw new Error("ファイルが既に存在します。");
+      throw new Error("登録済みのファイルです。");
     }
     fs.writeFileSync(pdfSavePath, pdfFileData);
     return pdfSavePath;
