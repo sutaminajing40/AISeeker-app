@@ -32,10 +32,10 @@ export function useFileUpload(): UseFileUploadResult {
 
     setIsLoading(true);
 
-    const success = await RegistPdf(file);
+    const response = await RegistPdf(file);
     setIsLoading(false);
-    setUploadStatus(success ? "success" : "error");
-    if (success) {
+    setUploadStatus(response.success ? "success" : "error");
+    if (response.success) {
       setFileName(file.name);
     }
 
