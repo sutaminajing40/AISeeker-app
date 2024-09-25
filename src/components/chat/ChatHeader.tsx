@@ -4,20 +4,23 @@ import { Menu } from "lucide-react";
 import { FileUpload } from "@/components/chat/FileUpload";
 
 interface ChatHeaderProps {
-  onOpenSidebar: () => void;
   selectedChat: string | null;
   chatTitle: string;
-  setFileUploaded: React.Dispatch<React.SetStateAction<boolean>>;
+  onOpenSidebar: () => void;
+  setFileUploaded: (uploaded: boolean) => void;
 }
 
-const ChatHeader = ({
-  onOpenSidebar,
+const ChatHeader: React.FC<ChatHeaderProps> = ({
   selectedChat,
   chatTitle,
+  onOpenSidebar,
   setFileUploaded,
-}: ChatHeaderProps) => {
+}) => {
   return (
-    <header className="flex flex-col border-b p-4 dark:border-gray-700">
+    <header
+      className="flex flex-col border-b p-4 dark:border-gray-700"
+      aria-label="チャットヘッダー"
+    >
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <Button
@@ -25,11 +28,11 @@ const ChatHeader = ({
             size="icon"
             onClick={onOpenSidebar}
             className="mr-2 md:hidden"
+            aria-label="サイドバーを開く"
           >
             <Menu className="h-6 w-6" />
-            <span className="sr-only">サイドバーを開く</span>
           </Button>
-          <h1 className="text-xl font-semibold text-gray-800 dark:text-white">
+          <h1 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
             {selectedChat ? chatTitle : "チャットを選択してください"}
           </h1>
         </div>

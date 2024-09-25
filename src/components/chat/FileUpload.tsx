@@ -4,7 +4,7 @@ import { UploadButton } from "@/components/chat/FileUploadButton";
 import React, { useEffect } from "react";
 
 type FileUploadProps = {
-  setFileUploaded: React.Dispatch<React.SetStateAction<boolean>>;
+  setFileUploaded: (uploaded: boolean) => void;
 };
 
 export function FileUpload({ setFileUploaded }: FileUploadProps) {
