@@ -30,6 +30,20 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 }
 
+export async function GET() {
+  try {
+    const pdfService = new PdfService();
+    const pdfList = await pdfService.getPdfList();
+    return NextResponse.json({ pdfList }, { status: 200 });
+  } catch (err) {
+    console.error("Error in GET /api/pdf:", err);
+    return NextResponse.json(
+      { message: "PDFの取得に失敗しました。" },
+      { status: 500 }
+    );
+  }
+}
+
 export async function DELETE() {
   try {
     const pdfService = new PdfService();

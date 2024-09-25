@@ -60,4 +60,13 @@ export class PdfService {
     fs.rmSync(this.pdfSaveDir, { recursive: true });
     fs.rmSync(this.faissIndexDir, { recursive: true });
   }
+
+  public async getPdfList(): Promise<string[]> {
+    // PDFファイルの一覧を取得する
+    // 1. pdfSaveDirディレクトリ内のすべてのファイルを取得
+    const files = fs.readdirSync(this.pdfSaveDir);
+    // 2. 拡張子が.pdfのファイルのみをフィルタリング
+    const pdfFiles = files.filter((file) => file.endsWith(".pdf"));
+    return pdfFiles;
+  }
 }
