@@ -5,7 +5,7 @@ export const useMessages = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
 
-  const displayMessage = (content: string, sender: "user" | "ai") => {
+  const addMessage = (content: string, sender: "user" | "ai") => {
     const newMessage: Message = {
       id: Date.now().toString(),
       content,
@@ -25,7 +25,7 @@ export const useMessages = () => {
   return {
     messages,
     inputMessage,
-    displayMessage,
+    addMessage,
     setInputMessage,
   };
 };
