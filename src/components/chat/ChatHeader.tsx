@@ -7,13 +7,15 @@ interface ChatHeaderProps {
   onOpenSidebar: () => void;
   selectedChat: string | null;
   chatTitle: string;
+  setFileUploaded: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export function ChatHeader({
+const ChatHeader = ({
   onOpenSidebar,
   selectedChat,
   chatTitle,
-}: ChatHeaderProps) {
+  setFileUploaded,
+}: ChatHeaderProps) => {
   return (
     <header className="flex flex-col border-b p-4 dark:border-gray-700">
       <div className="flex items-center justify-between">
@@ -31,10 +33,10 @@ export function ChatHeader({
             {selectedChat ? chatTitle : "チャットを選択してください"}
           </h1>
         </div>
-        <FileUpload />
+        <FileUpload setFileUploaded={setFileUploaded} />
       </div>
     </header>
   );
-}
+};
 
 export default ChatHeader;

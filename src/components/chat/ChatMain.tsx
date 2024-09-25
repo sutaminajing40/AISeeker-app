@@ -3,6 +3,8 @@ import ChatHeader from "./ChatHeader";
 import ChatFooter from "./ChatFooter";
 import MessageBubble from "./MessageBubble";
 import { getAiResponse } from "../../fetches/chat/getAiResponse";
+import { fetchRegisteredPDFs } from "../../fetches/pdf/GetPdf";
+import { useEffect, useState } from "react";
 
 interface ChatMainProps {
   chatTitle: string;
@@ -17,6 +19,19 @@ const ChatMain = ({
 }: ChatMainProps) => {
   const { messages, inputMessage, displayMessage, setInputMessage } =
     useMessages();
+  const [hasPDFs, setHasPDFs] = useState<boolean>(false);
+  const [fileUploaded, setFileUploaded] = useState(false);
+
+  useEffect(() => {
+    fetchRegisteredPDFs()
+      .then((pdfs) => {
+        setHasPDFs(pdfs.length > 0);
+      })
+      .catch((error) => {
+        console.error("PDFの取得に失敗しました:", error);
+        setHasPDFs(false);
+      });
+  }, [fileUploaded]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,6 +49,7 @@ const ChatMain = ({
         onOpenSidebar={onOpenSidebar}
         selectedChat={selectedChat}
         chatTitle={chatTitle}
+        setFileUploaded={setFileUploaded}
       />
 
       <div className="flex-1 overflow-y-auto p-4">
@@ -51,6 +67,7 @@ const ChatMain = ({
         message={inputMessage}
         setMessage={setInputMessage}
         handleSubmit={handleSubmit}
+        hasPDFs={hasPDFs}
       />
     </main>
   );

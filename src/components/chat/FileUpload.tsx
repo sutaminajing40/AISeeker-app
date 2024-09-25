@@ -1,9 +1,13 @@
-import React from "react";
 import { useFileUpload } from "@/hooks/useFileUpload";
 import { ToastNotification } from "@/components/ui/Toast";
 import { UploadButton } from "@/components/chat/FileUploadButton";
+import React, { useEffect } from "react";
 
-export function FileUpload() {
+type FileUploadProps = {
+  setFileUploaded: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export function FileUpload({ setFileUploaded }: FileUploadProps) {
   const {
     isLoading,
     uploadResponce,
@@ -14,6 +18,12 @@ export function FileUpload() {
     handleFileUpload,
     triggerFileUpload,
   } = useFileUpload();
+
+  useEffect(() => {
+    if (uploadResponce.success) {
+      setFileUploaded(true);
+    }
+  }, [uploadResponce.success, setFileUploaded]);
 
   return (
     <>
