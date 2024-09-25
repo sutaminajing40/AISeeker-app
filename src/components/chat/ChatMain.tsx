@@ -17,8 +17,7 @@ const ChatMain = ({
   selectedChat,
   onOpenSidebar,
 }: ChatMainProps) => {
-  const { messages, inputMessage, displayMessage, setInputMessage } =
-    useMessages();
+  const { messages, inputMessage, addMessage, setInputMessage } = useMessages();
   const [hasPDFs, setHasPDFs] = useState<boolean>(false);
   const [fileUploaded, setFileUploaded] = useState(false);
 
@@ -37,11 +36,11 @@ const ChatMain = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // ユーザーのメッセージをUIに表示
-    displayMessage(inputMessage, "user");
+    addMessage(inputMessage, "user");
 
     const result = await getAiResponse(inputMessage);
     const response = result.message;
-    displayMessage(response, "ai");
+    addMessage(response, "ai");
   };
 
   return (
