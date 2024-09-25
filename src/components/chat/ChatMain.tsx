@@ -33,6 +33,7 @@ const ChatMain = ({
       });
   }, [fileUploaded]);
 
+  // displayMessageを呼び出すので、ChatFooterではなくChatMainで定義する
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // ユーザーのメッセージをUIに表示
